@@ -1,4 +1,4 @@
-import { last } from "lodash";
+import { curry, curryRight, last } from "lodash";
 import { drawData } from "./utils/dom";
 
 const apiUrl = 'http://localhost:3000';
@@ -28,4 +28,23 @@ deleteBtn.addEventListener('click', () => {
 })
 
 console.log(last([1,2,3]));
-console.log("Hello");
+
+const later = (value,cb, time = 1000) => setTimeout(() => cb(value), time);
+const promisifyLater = (value, time = 1000) => 
+    new Promise((res) => later(value, res, time));
+
+const firstTask = (value) => console.log(`First: ${value}`);
+const secondTask = (value) => console.log(`Second: ${value}`);
+
+const half = (value) => value / 2;
+const sqrt = (value) => Math.sqrt(value);
+
+const pr = promisifyLater(200);
+const halfPr = pr.then(half)
+                    .then(half)
+                    .then(curryRight(Math.pow)(2))
+                    .then(half)
+                    .then(half)
+                    .then(console.log);
+
+

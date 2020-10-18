@@ -1,3 +1,4 @@
+import Axios from "axios";
 import { curry, curryRight, last } from "lodash";
 import { drawData } from "./utils/dom";
 
@@ -9,22 +10,21 @@ const addBtn = document.getElementById('add'),
 
 
 
-fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => drawData(data, wrapper));
+Axios.get(apiUrl).then((response) => drawData(response.data, wrapper));
 
 wrapper.addEventListener('click', (e) => {
     if (e.target.classList.contains('delete')) {
-        fetch(`${apiUrl}/delete?id=${e.target.dataset.userId}`).then((response) => response.json()).then((data) => drawData(data, wrapper));
+        Axios.get(`${apiUrl}/delete?id=${e.target.dataset.userId}`)
+            .then((response) => drawData(response.data, wrapper));
     }
 });
 
 addBtn.addEventListener('click', () => {
-    fetch(`${apiUrl}/add`).then((response) => response.json()).then((data) => drawData(data, wrapper));
+    Axios.get(`${apiUrl}/add`).then((response) => drawData(response.data, wrapper));
 })
 
 deleteBtn.addEventListener('click', () => {
-    fetch(`${apiUrl}/delete`).then((response) => response.json()).then((data) => drawData(data, wrapper));
+    Axios.get(`${apiUrl}/delete`).then((response) => drawData(response.data, wrapper));
 })
 
 console.log(last([1,2,3]));
